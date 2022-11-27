@@ -21,10 +21,10 @@ WIN = (60, 130, 140)
 pygame.init()
 gameDisplay = pygame.display.set_mode((1000, 600))
 
-wall1 = pygame.image.load('./Proyecto_3_Utilidades/wall1.png').convert()
-wall2 = pygame.image.load('./Proyecto_3_Utilidades/wall2.png').convert()
-wall3 = pygame.image.load('./Proyecto_3_Utilidades/wall3.png').convert()
-enemy = pygame.image.load('./Proyecto_3_Utilidades/sprite1.png').convert()
+wall1 = pygame.image.load('./Proyecto_3_Utilidades/WallDoomTexture1.png').convert()
+wall2 = pygame.image.load('./Proyecto_3_Utilidades/WallTextureDoom2.png').convert()
+wall3 = pygame.image.load('./Proyecto_3_Utilidades/DoorDoom.png').convert()
+enemy = pygame.image.load('./Proyecto_3_Utilidades/sprite3.png').convert()
 hand = pygame.image.load('./Proyecto_3_Utilidades/player.png').convert()
 
 #Establecemos el diccionario de texturas a utilizar
@@ -45,6 +45,7 @@ enemies = [
 
 PLAYER_SIZE = 0.125
 CAST_SIZE = 2.56
+PI_20 = 0.157
 
 class Raycaster (object):
     def __init__(self, gameDisplay):
@@ -168,7 +169,7 @@ class Raycaster (object):
 
         self.point(int(self.player["x"] * 0.2) + 900, int(self.player["y"] * 0.2) + 500, LOSE)
 		
-        self.draw_player(466, 244, hand)
+        self.draw_player(400, 350, hand)
 
     def text_objects(self, text, font):
         textSurface = font.render(text, True, WHITE)
@@ -289,36 +290,39 @@ class Raycaster (object):
         while running:
             gameDisplay.fill(BACKGROUND)
             if not paused:
-                gameDisplay.blit(self.Update(), [600, 550])
+                gameDisplay.blit(self.Update(), [100, 550])
                 if (r.player["x"] >= 400 and r.player["x"] <= 420) and (r.player["y"] >= 250 and r.player["y"] <= 265):
                     self.game_win() 
                 r.render()
                 pygame.display.flip()
                 clock.tick(60)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT or (e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE):
                     running = False
                     exit(0)
-                if event.type == pygame.KEYDOWN:
+                if e.type == pygame.KEYDOWN:
                     if not paused:
-                        if event.key == pygame.K_LEFT:
-                            r.player["x"] -= 0.16
-                        if event.key == pygame.K_RIGHT:
-                            r.player["x"] += 0.16
-                        if event.key == pygame.K_UP:
+                        if e.key == pygame.K_LEFT:
+                            r.player["a"] -= PI_20
+                        if e.key == pygame.K_RIGHT:
+                            r.player["a"] += PI_20
+                        if e.key == pygame.K_UP:
                             r.player["x"] += int(d * cos(r.player["a"]))
                             r.player["y"] += int(d * sin(r.player["a"]))
-                        if event.key == pygame.K_DOWN:
+                        if e.key == pygame.K_DOWN:
                             r.player["x"] -= int(d * cos(r.player["a"]))
                             r.player["y"] -= int(d * sin(r.player["a"]))
-                        if event.key == pygame.K_SPACE:
-                            paused = not paused
-                        if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP:
-                            if not paused:
-                                if event.button == 4:
-                                    r.player['a'] -= 0.16
-                                if event.button == 5:
-                                    r.player['a'] += 0.16
+                        if e.key == pygame.K_s: 
+                            r.sound()
+                    if e.key == pygame.K_SPACE:
+                        paused = not paused
+                if e.type == pygame.MOUSEBUTTONDOWN or e.type == pygame.MOUSEBUTTONUP:
+                    if not paused:
+                        if e.button == 4:
+                            r.player['a'] -= PI_20
+                        if e.button == 5:
+                            r.player['a'] += PI_20
+			
 			
 
 
